@@ -10,6 +10,11 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow factoryClass="com.github.asmaaatya.salatlock.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.asmaaatya.salatlock.startup.MyProjectActivity" />
+        <startupActivity implementation="com.github.asmaaatya.salatlock.startup.MyProjectActivity" />
+        <applicationService serviceImplementation="com.github.asmaaatya.salatlock.setting.PrayerSettingsState"/>
+        <applicationConfigurable instance="com.github.asmaaatya.salatlock.setting.PrayerSettingsConfigurable"/>
+<!--        .\gradlew buildPlugin-->
+
+        <!--        <projectConfigurable instance="com.github.asmaaatya.salatlock.settings.PrayerSettingsConfigurable"/>-->
     </extensions>
 </idea-plugin>
