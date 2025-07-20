@@ -1,6 +1,6 @@
-# SalatLock
+# Aqim As-Salat
 
-![Build](https://github.com/asmaaatya/SalatLock/workflows/Build/badge.svg)
+[//]: # (![Build]&#40;https://github.com/asmaaatya/SalatLock/workflows/Build/badge.svg&#41;)
 [![Version](https://img.shields.io/jetbrains/plugin/v/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
 
@@ -28,7 +28,7 @@ To keep everything working, do not remove `<!-- ... -->` sections.
 
 - Using the IDE built-in plugin system:
   
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "SalatLock"</kbd> >
+  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "Aqim As-Salat"</kbd> >
   <kbd>Install</kbd>
   
 - Using JetBrains Marketplace:
@@ -38,10 +38,12 @@ To keep everything working, do not remove `<!-- ... -->` sections.
   You can also download the [latest release](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID/versions) from JetBrains Marketplace and install it manually using
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
-- Manually:
+[//]: # (- Manually:)
 
-  Download the [latest release](https://github.com/asmaaatya/SalatLock/releases/latest) and install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
+[//]: # ()
+[//]: # (  Download the [latest release]&#40;https://github.com/asmaaatya/SalatLock/releases/latest&#41; and install it manually using)
+
+[//]: # (  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>)
 
 
 ---

@@ -1,6 +1,6 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-# SalatLock Changelog
+# Aqim As-Salat Changelog
 
 ## [Unreleased]
 ### Added
