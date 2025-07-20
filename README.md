@@ -1,53 +1,105 @@
-# Aqim As-Salat
+# 🕌 Aqim As-Salat - Prayer Time Plugin for Android Studio
 
-[//]: # (![Build]&#40;https://github.com/asmaaatya/SalatLock/workflows/Build/badge.svg&#41;)
-[![Version](https://img.shields.io/jetbrains/plugin/v/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
-
-## Template ToDo list
-- [x] Create a new [IntelliJ Platform Plugin Template][template] project.
-- [ ] Get familiar with the [template documentation][template].
-- [ ] Adjust the [pluginGroup](./gradle.properties) and [pluginName](./gradle.properties), as well as the [id](./src/main/resources/META-INF/plugin.xml) and [sources package](./src/main/kotlin).
-- [ ] Adjust the plugin description in `README` (see [Tips][docs:plugin-description])
-- [ ] Review the [Legal Agreements](https://plugins.jetbrains.com/docs/marketplace/legal-agreements.html?from=IJPluginTemplate).
-- [ ] [Publish a plugin manually](https://plugins.jetbrains.com/docs/intellij/publishing-plugin.html?from=IJPluginTemplate) for the first time.
-- [ ] Set the `MARKETPLACE_ID` in the above README badges. You can obtain it once the plugin is published to JetBrains Marketplace.
-- [ ] Set the [Plugin Signing](https://plugins.jetbrains.com/docs/intellij/plugin-signing.html?from=IJPluginTemplate) related [secrets](https://github.com/JetBrains/intellij-platform-plugin-template#environment-variables).
-- [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html?from=IJPluginTemplate).
-- [ ] Click the <kbd>Watch</kbd> button on the top of the [IntelliJ Platform Plugin Template][template] to be notified about releases containing new features and fixes.
-
-<!-- Plugin description -->
-This Fancy IntelliJ Platform Plugin is going to be your implementation of the brilliant ideas that you have.
-
-This specific section is a source for the [plugin.xml](/src/main/resources/META-INF/plugin.xml) file which will be extracted by the [Gradle](/build.gradle.kts) during the build process.
-
-To keep everything working, do not remove `<!-- ... -->` sections. 
-<!-- Plugin description end -->
-
-## Installation
-
-- Using the IDE built-in plugin system:
-  
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "Aqim As-Salat"</kbd> >
-  <kbd>Install</kbd>
-  
-- Using JetBrains Marketplace:
-
-  Go to [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID) and install it by clicking the <kbd>Install to ...</kbd> button in case your IDE is running.
-
-  You can also download the [latest release](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID/versions) from JetBrains Marketplace and install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
-
-[//]: # (- Manually:)
-
-[//]: # ()
-[//]: # (  Download the [latest release]&#40;https://github.com/asmaaatya/SalatLock/releases/latest&#41; and install it manually using)
-
-[//]: # (  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>)
-
+**Aqim As-Salat** is a plugin for Android Studio / IntelliJ IDEA that helps Muslim developers keep track of daily prayer times by showing notifications and optionally closing the IDE at prayer time.
 
 ---
-Plugin based on the [IntelliJ Platform Plugin Template][template].
 
-[template]: https://github.com/JetBrains/intellij-platform-plugin-template
-[docs:plugin-description]: https://plugins.jetbrains.com/docs/intellij/plugin-user-experience.html#plugin-description-and-presentation
+## 📌 Features
+
+- ✅ Automatically fetches daily prayer times using [Aladhan API](https://aladhan.com/prayer-times-api).
+- ✅ Displays system tray icon with next prayer info.
+- ✅ Optionally shuts down the IDE at the time of prayer.
+- ✅ Configurable settings: City, Country, Calculation Method, Language.
+- ✅ Supports localization: English & Arabic.
+
+---
+
+## ⚙️ Settings
+
+Go to: `Settings → Aqim As-Salat`
+
+- **City**: Choose from predefined cities like Cairo, Riyadh, Makkah, etc.
+- **Country**: Choose from available countries.
+- **Calculation Method**: ISNA, Egyptian, MWL.
+- **Language**: English or Arabic.
+- **Auto Shutdown**: Enable or disable IDE shutdown at prayer time.
+
+All settings are saved automatically using `PrayerSettingsState`.
+
+---
+
+## 🖼️ Tray Icon
+
+The plugin adds a system tray icon with options:
+- View next prayer time
+- Exit IDE manually
+
+---
+
+## 🌐 Localization
+
+The plugin supports:
+- 🇬🇧 English (default)
+- 🇸🇦 Arabic (العربية)
+
+Localization is applied in all dialogs, tray tooltips, and settings.
+
+---
+
+## 🔧 Requirements
+
+- Android Studio / IntelliJ IDEA 2022.3+
+- Internet connection (to fetch prayer times)
+- JDK 17+
+
+---
+## 📦 src
+├── main
+│   ├── kotlin
+│   │   └── com
+│   │       └── ilaasalaty
+│   │           ├── api
+│   │           │   ├── PrayerApiClient.kt
+│   │           │   └── PrayerTimesApi.kt
+│   │           │   └── PrayerTimesResponse.kt
+│   │           │
+│   │           ├── core
+│   │           │   └── PrayerTimeManager.kt
+│   │           │
+│   │           ├── tray
+│   │           │   └── TrayIconManager.kt
+│   │           │
+│   │           ├── settings
+│   │           │   ├── PrayerSettingsConfigurable.kt
+│   │           │   └── PrayerSettingsState.kt
+│   │           │
+│   │           └── lang
+│   │               └── Messages.kt
+│   │
+│   └── resources
+│       ├── META-INF
+│       │   └── plugin.xml
+│       │
+│       ├── messages.properties              # English (default)
+│       ├── messages_ar.properties           # Arabic
+│       └── icons
+│           └── icon.png
+
+
+## 🛠️ Build & Install
+
+1. Open the project in IntelliJ IDEA.
+2. Use **Gradle Plugin Dev** or `buildPlugin` task.
+3. Install `.zip` from `Plugins → Install Plugin from Disk`.
+
+
+## 🙏 Contribution
+
+Feel free to open issues or pull requests for ideas or improvements.
+
+---
+
+## 📜 License
+
+MIT License
+
