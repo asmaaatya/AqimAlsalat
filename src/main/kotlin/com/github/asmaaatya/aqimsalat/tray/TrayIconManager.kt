@@ -1,4 +1,4 @@
-package com.github.asmaaatya.salatlock.tray
+package com.github.asmaaatya.aqimsalat.tray
 
 
 import com.intellij.openapi.application.ApplicationManager
@@ -38,9 +38,9 @@ object TrayIconManager {
         popup.add(infoItem)
         popup.add(exitItem)
 
-        trayIcon = TrayIcon(image, "Ilaa Salaty", popup).apply {
+        trayIcon = TrayIcon(image, "Aqim As-Salat", popup).apply {
             isImageAutoSize = true
-            toolTip = "Ilaa Salaty - Prayer Time Manager"
+            toolTip = "Aqim As-Salat - Prayer Time Manager"
         }
 
         try {

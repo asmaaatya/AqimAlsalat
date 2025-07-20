@@ -1,7 +1,6 @@
-package com.github.asmaaatya.salatlock.startup
+package com.github.asmaaatya.aqimsalat.startup
 
-import com.github.asmaaatya.salatlock.core.PrayerTimeManager
-import com.intellij.openapi.diagnostic.thisLogger
+import com.github.asmaaatya.aqimsalat.core.PrayerTimeManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
 

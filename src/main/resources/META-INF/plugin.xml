@@ -1,20 +1,20 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.asmaaatya.salatlock</id>
-    <name>SalatLock</name>
+    <id>com.github.asmaaatya.aqimsalat</id>
+    <name>Aqim As-Salat</name>
     <vendor>asmaaatya</vendor>
-
+    <icon path="/icons/icon.png"/>
     <depends>com.intellij.modules.platform</depends>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.asmaaatya.salatlock.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <startupActivity implementation="com.github.asmaaatya.salatlock.startup.MyProjectActivity" />
-        <applicationService serviceImplementation="com.github.asmaaatya.salatlock.setting.PrayerSettingsState"/>
-        <applicationConfigurable instance="com.github.asmaaatya.salatlock.setting.PrayerSettingsConfigurable"/>
+        <toolWindow factoryClass="com.github.asmaaatya.aqimsalat.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
+        <startupActivity implementation="com.github.asmaaatya.aqimsalat.startup.MyProjectActivity" />
+        <applicationService serviceImplementation="com.github.asmaaatya.aqimsalat.setting.PrayerSettingsState"/>
+        <applicationConfigurable instance="com.github.asmaaatya.aqimsalat.setting.PrayerSettingsConfigurable"/>
 <!--        .\gradlew buildPlugin-->
 
-        <!--        <projectConfigurable instance="com.github.asmaaatya.salatlock.settings.PrayerSettingsConfigurable"/>-->
+        <!--        <projectConfigurable instance="com.github.asmaaatya.aqimsalat.settings.PrayerSettingsConfigurable"/>-->
     </extensions>
 </idea-plugin>

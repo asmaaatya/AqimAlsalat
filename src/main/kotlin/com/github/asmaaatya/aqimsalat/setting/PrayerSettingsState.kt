@@ -1,4 +1,4 @@
-package com.github.asmaaatya.salatlock.setting
+package com.github.asmaaatya.aqimsalat.setting
 
 
 import com.intellij.openapi.components.*

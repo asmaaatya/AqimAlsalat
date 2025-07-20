@@ -1,4 +1,4 @@
-package com.github.asmaaatya.salatlock.lang
+package com.github.asmaaatya.aqimsalat.lang
 
 import com.intellij.CommonBundle
 import java.util.*

@@ -1,9 +1,9 @@
-package com.github.asmaaatya.salatlock.core
+package com.github.asmaaatya.aqimsalat.core
 
-import com.github.asmaaatya.salatlock.api.PrayerApiClient
-import com.github.asmaaatya.salatlock.api.PrayerTimesResponse
-import com.github.asmaaatya.salatlock.core.dialog.FocusModeDialog
-import com.github.asmaaatya.salatlock.tray.TrayIconManager
+import com.github.asmaaatya.aqimsalat.api.PrayerApiClient
+import com.github.asmaaatya.aqimsalat.api.PrayerTimesResponse
+import com.github.asmaaatya.aqimsalat.core.dialog.FocusModeDialog
+import com.github.asmaaatya.aqimsalat.tray.TrayIconManager
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

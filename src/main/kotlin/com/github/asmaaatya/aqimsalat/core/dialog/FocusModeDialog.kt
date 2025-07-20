@@ -1,4 +1,4 @@
-package com.github.asmaaatya.salatlock.core.dialog
+package com.github.asmaaatya.aqimsalat.core.dialog
 
 
 import com.intellij.openapi.ui.DialogWrapper

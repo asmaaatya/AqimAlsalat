@@ -1,4 +1,4 @@
-package com.github.asmaaatya.salatlock
+package com.github.asmaaatya.aqimsalat
 
 import com.intellij.DynamicBundle
 import org.jetbrains.annotations.NonNls

@@ -1,4 +1,4 @@
-package com.github.asmaaatya.salatlock.api
+package com.github.asmaaatya.aqimsalat.api
 
 
 import retrofit2.Retrofit

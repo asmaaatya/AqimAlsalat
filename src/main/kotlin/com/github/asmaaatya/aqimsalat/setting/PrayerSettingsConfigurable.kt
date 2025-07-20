@@ -1,4 +1,4 @@
-package com.github.asmaaatya.salatlock.setting
+package com.github.asmaaatya.aqimsalat.setting
 
 
 import com.intellij.openapi.options.Configurable
@@ -88,5 +88,5 @@ class PrayerSettingsConfigurable : Configurable {
         }
     }
 
-    override fun getDisplayName(): String = "Ilaa Salaty"
+    override fun getDisplayName(): String = "Aqim As-Salat"
 }

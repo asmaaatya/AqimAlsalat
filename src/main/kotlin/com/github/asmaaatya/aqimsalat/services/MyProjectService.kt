@@ -1,9 +1,9 @@
-package com.github.asmaaatya.salatlock.services
+package com.github.asmaaatya.aqimsalat.services
 
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
-import com.github.asmaaatya.salatlock.MyBundle
+import com.github.asmaaatya.aqimsalat.MyBundle
 
 @Service(Service.Level.PROJECT)
 class MyProjectService(project: Project) {
