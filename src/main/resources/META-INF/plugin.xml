@@ -15,18 +15,8 @@
         <applicationConfigurable instance="com.github.asmaaatya.aqimsalat.setting.PrayerSettingsConfigurable"/>
     </extensions>
 
-    <description><![CDATA[
-        <h3>🕌 Aqim As-Salat</h3>
-        <p><strong>Aqim As-Salat</strong> is a productivity and spiritual well-being plugin designed for Muslim developers using Android Studio or IntelliJ IDEA. It helps you stay mindful of your daily Islamic prayers (Salat) without disrupting your workflow.</p>
-        <ul>
-            <li>🕰️ <strong>Daily Prayer Notifications</strong> – Timely reminders for Fajr, Dhuhr, Asr, Maghrib, and Isha based on your location.</li>
-            <li>🔔 <strong>Custom Alerts</strong> – Choose silent, pop-up, or sound notifications.</li>
-            <li>🕌 <strong>IDE Auto-Close (Optional)</strong> – Prompt or auto-close IDE during prayer times to help you pause work and focus on worship.</li>
-            <li>🌍 <strong>Location-Based Timing</strong> – Automatically fetches prayer times with support for major calculation methods (Umm al-Qura, ISNA, MWL, etc.).</li>
-            <li>🧭 <strong>Qibla Direction (Planned)</strong> – An integrated Qibla compass feature is coming soon.</li>
-            <li>⚙️ <strong>User-Friendly Settings</strong> – Customize prayer time offsets, methods, and notifications via a clean settings panel.</li>
-        </ul>
-    ]]></description>
+    <description>Aqim As-Salat is a plugin that helps Muslim developers stay mindful of daily prayers during coding.</description>
+
 
     <change-notes><![CDATA[
         Initial release:
