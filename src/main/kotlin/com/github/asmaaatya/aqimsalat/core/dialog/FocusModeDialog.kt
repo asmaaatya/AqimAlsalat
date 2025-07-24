@@ -1,11 +1,15 @@
 package com.github.asmaaatya.aqimsalat.core.dialog
 
 
+import com.github.asmaaatya.aqimsalat.setting.PrayerSettingsState
 import com.intellij.openapi.ui.DialogWrapper
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Font
+import java.io.BufferedInputStream
 import java.util.Timer
+import javax.sound.sampled.AudioSystem
+import javax.sound.sampled.Clip
 import javax.swing.*
 import kotlin.concurrent.fixedRateTimer
 
@@ -24,6 +28,9 @@ class FocusModeDialog(
         isModal = true
         init()
         startCountdown()
+        if (PrayerSettingsState.getInstance().state.playSound) {
+            playAdhanSound()
+        }
     }
 
     override fun createCenterPanel(): JComponent {
@@ -82,5 +89,17 @@ class FocusModeDialog(
         val mins = remainingSeconds / 60
         val secs = remainingSeconds % 60
         countdownLabel.text = String.format("%02d:%02d", mins, secs)
+    }
+    private fun playAdhanSound() {
+        try {
+            val audioInputStream = AudioSystem.getAudioInputStream(
+                BufferedInputStream(javaClass.getResourceAsStream("/main_sound/adhan.mp3"))
+            )
+            val clip: Clip = AudioSystem.getClip()
+            clip.open(audioInputStream)
+            clip.start()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }

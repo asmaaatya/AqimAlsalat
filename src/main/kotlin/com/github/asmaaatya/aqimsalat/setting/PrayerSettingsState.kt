@@ -15,7 +15,8 @@ class PrayerSettingsState : PersistentStateComponent<PrayerSettingsState.State> 
         var country: String = "Egypt",
         var language: String = "en",
         var autoShutdownEnabled: Boolean = true,
-        var method:Int = 5
+        var method:Int = 5,
+        var playSound: Boolean = true
     )
 
     private var state = State()

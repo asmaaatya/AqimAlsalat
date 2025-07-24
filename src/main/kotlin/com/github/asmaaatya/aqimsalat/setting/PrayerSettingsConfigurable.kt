@@ -13,6 +13,7 @@ class PrayerSettingsConfigurable : Configurable {
     private lateinit var languageDropdown: JComboBox<String>
     private lateinit var autoShutdownCheckbox: JCheckBox
     private lateinit var methodBox: JComboBox<String>
+    private lateinit var playSoundCheckbox: JCheckBox
 
     override fun createComponent(): JComponent {
         val panel = JPanel(GridLayout(0, 2, 10, 10))
@@ -40,6 +41,10 @@ class PrayerSettingsConfigurable : Configurable {
         // Auto-shutdown toggle
         autoShutdownCheckbox = JCheckBox("Enable Auto Shutdown", settings.autoShutdownEnabled)
 
+        //sound
+
+        playSoundCheckbox = JCheckBox("Play Adhan Sound", settings.playSound)
+
         panel.add(JLabel("Country:"))
         panel.add(countryDropdown)
 
@@ -55,6 +60,9 @@ class PrayerSettingsConfigurable : Configurable {
         panel.add(JLabel("Auto Shutdown:"))
         panel.add(autoShutdownCheckbox)
 
+        panel.add(JLabel("Notification Sound:"));
+        panel.add(playSoundCheckbox)
+
         return panel
     }
 
@@ -63,7 +71,8 @@ class PrayerSettingsConfigurable : Configurable {
                 settings.country != countryDropdown.selectedItem ||
                 settings.language != getSelectedLanguageCode() ||
                 settings.method != getSelectedMethodValue() ||
-                settings.autoShutdownEnabled != autoShutdownCheckbox.isSelected
+                settings.autoShutdownEnabled != autoShutdownCheckbox.isSelected ||
+                settings.playSound != playSoundCheckbox.isSelected
     }
 
     override fun apply() {
@@ -72,6 +81,7 @@ class PrayerSettingsConfigurable : Configurable {
         settings.language = getSelectedLanguageCode()
         settings.method = getSelectedMethodValue()
         settings.autoShutdownEnabled = autoShutdownCheckbox.isSelected
+        settings.playSound = playSoundCheckbox.isSelected
     }
 
     private fun getSelectedLanguageCode(): String {
