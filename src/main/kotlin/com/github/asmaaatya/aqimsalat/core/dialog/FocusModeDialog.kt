@@ -12,54 +12,68 @@ import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.Clip
 import javax.swing.*
 import kotlin.concurrent.fixedRateTimer
+import com.intellij.ui.JBColor
+import com.intellij.util.ui.JBUI
 
 class FocusModeDialog(
     private val prayerName: String,
     private val focusMinutes: Int = 15
 ) : DialogWrapper(true) {
 
-    private val countdownLabel = JLabel()
-    private var remainingSeconds = focusMinutes * 60
+    private val countdownLabel = JLabel().apply {
+        horizontalAlignment = SwingConstants.CENTER
+        font = Font("Monospaced", Font.BOLD, 24)
+        foreground = JBColor(0x2E7D32, 0x81C784) // Green color scheme
+    }
 
-    private lateinit var timer: Timer
+    private var remainingSeconds = focusMinutes * 60
+    private var timer: Timer? = null
+    private var audioClip: Clip? = null
 
     init {
-        title = "Prayer Time – $prayerName"
+        title = "🕌 $prayerName Prayer Time"
         isModal = true
         init()
         startCountdown()
-        if (PrayerSettingsState.getInstance().state.playSound) {
-            playAdhanSound()
-        }
+        playAdhanSoundIfEnabled()
     }
 
     override fun createCenterPanel(): JComponent {
-        val panel = JPanel(BorderLayout(10, 10)).apply {
-            preferredSize = Dimension(400, 150)
+        return JPanel(BorderLayout(10, 10)).apply {
+            preferredSize = Dimension(400, 180)
+            border = JBUI.Borders.empty(20)
+
+            val message = JLabel(
+                "<html><div style='text-align: center;'>" +
+                        "It's time for <b style='color:#2E7D32;'>$prayerName</b> prayer<br>" +
+                        "Focus mode will end in:</div></html>",
+                SwingConstants.CENTER
+            ).apply {
+                font = Font("Dialog", Font.PLAIN, 16)
+            }
+
+            add(message, BorderLayout.NORTH)
+            add(countdownLabel, BorderLayout.CENTER)
+
+            // Add prayer icon
+            add(JLabel(ImageIcon(javaClass.getResource("/icons/prayer.png"))).apply {
+                horizontalAlignment = SwingConstants.CENTER
+            }, BorderLayout.SOUTH)
         }
-
-        val message = JLabel(
-            "<html><center>It’s time for <b>$prayerName</b> prayer.<br/>" +
-                    "Focus Mode will end in:</center></html>",
-            SwingConstants.CENTER
-        )
-        message.font = Font("Dialog", Font.PLAIN, 16)
-
-        countdownLabel.horizontalAlignment = SwingConstants.CENTER
-        countdownLabel.font = Font("Monospaced", Font.BOLD, 24)
-
-        panel.add(message, BorderLayout.NORTH)
-        panel.add(countdownLabel, BorderLayout.CENTER)
-
-        return panel
     }
 
     override fun createActions(): Array<Action> {
         return arrayOf(
-            object : DialogWrapperAction("I Already Prayed") {
+            object : DialogWrapperAction("I've Prayed 🙏") {
                 override fun doAction(e: java.awt.event.ActionEvent?) {
-                    stopTimer()
+                    cleanupResources()
                     close(OK_EXIT_CODE)
+                }
+            },
+            object : DialogWrapperAction("Snooze (5 min)") {
+                override fun doAction(e: java.awt.event.ActionEvent?) {
+                    remainingSeconds = 5 * 60
+                    updateCountdownLabel()
                 }
             }
         )
@@ -71,35 +85,54 @@ class FocusModeDialog(
             remainingSeconds--
             SwingUtilities.invokeLater {
                 updateCountdownLabel()
-            }
-            if (remainingSeconds <= 0) {
-                stopTimer()
-                SwingUtilities.invokeLater {
-                    close(OK_EXIT_CODE)
+                if (remainingSeconds <= 0) {
+                    cleanupResources()
+                    SwingUtilities.invokeLater { close(OK_EXIT_CODE) }
                 }
             }
         }
     }
 
-    private fun stopTimer() {
-        timer.cancel()
+    private fun playAdhanSoundIfEnabled() {
+        if (PrayerSettingsState.getInstance().state.playSound) {
+            Thread {
+                try {
+                    val audioStream = BufferedInputStream(
+                        javaClass.getResourceAsStream("/sounds/adhan.wav")
+                            ?: return@Thread
+                    )
+                    val audioIn = AudioSystem.getAudioInputStream(audioStream)
+                    audioClip = AudioSystem.getClip().apply {
+                        open(audioIn)
+                        start()
+                    }
+                } catch (e: Exception) {
+                    println("Error playing adhan: ${e.message}")
+                }
+            }.start()
+        }
     }
 
     private fun updateCountdownLabel() {
         val mins = remainingSeconds / 60
         val secs = remainingSeconds % 60
         countdownLabel.text = String.format("%02d:%02d", mins, secs)
-    }
-    private fun playAdhanSound() {
-        try {
-            val audioInputStream = AudioSystem.getAudioInputStream(
-                BufferedInputStream(javaClass.getResourceAsStream("/main_sound/adhan.mp3"))
-            )
-            val clip: Clip = AudioSystem.getClip()
-            clip.open(audioInputStream)
-            clip.start()
-        } catch (e: Exception) {
-            e.printStackTrace()
+
+        // Visual feedback when time is running out
+        when (remainingSeconds) {
+            in 0..30 -> countdownLabel.foreground = JBColor.RED
+            in 31..60 -> countdownLabel.foreground = JBColor.ORANGE
         }
+    }
+
+    private fun cleanupResources() {
+        timer?.cancel()
+        audioClip?.stop()
+        audioClip?.close()
+    }
+
+    override fun dispose() {
+        cleanupResources()
+        super.dispose()
     }
 }

@@ -7,6 +7,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
 object PrayerApiClient {
+    //./gradlew runIde
     private val retrofit: Retrofit
 
     init {

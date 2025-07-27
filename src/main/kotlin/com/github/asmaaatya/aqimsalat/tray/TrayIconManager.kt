@@ -1,56 +1,135 @@
 package com.github.asmaaatya.aqimsalat.tray
 
 
+import com.github.asmaaatya.aqimsalat.services.MyProjectService
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.diagnostic.thisLogger
 import java.awt.MenuItem
 import java.awt.PopupMenu
 import java.awt.SystemTray
 import java.awt.TrayIcon
+import java.awt.event.ActionListener
+import java.time.format.DateTimeFormatter
 import javax.imageio.ImageIO
 import javax.swing.JOptionPane
 
+
 object TrayIconManager {
-
+    private val logger = thisLogger()
     private var trayIcon: TrayIcon? = null
+    private var prayerService: MyProjectService? = null
 
-    fun setupTrayIcon() {
-        if (!SystemTray.isSupported()) return
+    fun setupTrayIcon(prayerService: MyProjectService) {
+        if (!SystemTray.isSupported()) {
+            logger.warn("System tray is not supported")
+            return
+        }
 
-        if (trayIcon != null) return
+        if (trayIcon != null) {
+            logger.info("Tray icon already initialized")
+            return
+        }
 
-        val tray = SystemTray.getSystemTray()
-        val image = ImageIO.read(TrayIconManager::class.java.getResource("/icons/icon.png"))
+        this.prayerService = prayerService
 
-        val popup = PopupMenu()
+        try {
+            val image = ImageIO.read(javaClass.getResourceAsStream("/icons/tray_icon.png"))
+                ?: throw IllegalStateException("Tray icon image not found")
 
-        val exitItem = MenuItem("Exit Android Studio").apply {
+            val popup = createPopupMenu()
+            val tray = SystemTray.getSystemTray()
+
+            trayIcon = TrayIcon(image, "Aqim As-Salat", popup).apply {
+                isImageAutoSize = true
+                toolTip = "Aqim As-Salat - Prayer Time Manager"
+                addActionListener(createTrayClickListener())
+            }
+
+            tray.add(trayIcon)
+            logger.info("Tray icon successfully initialized")
+        } catch (e: Exception) {
+            logger.error("Failed to initialize tray icon", e)
+        }
+    }
+//./gradlew runIde
+    private fun createPopupMenu(): PopupMenu {
+        return PopupMenu().apply {
+            add(createNextPrayerItem())
+            add(createSettingsItem())
+            addSeparator()
+            add(createExitItem())
+        }
+    }
+
+    private fun createNextPrayerItem(): MenuItem {
+        return MenuItem("Next Prayer").apply {
+            addActionListener {
+                prayerService?.getNextPrayerTime()?.let { nextPrayer ->
+//                    val prayerName = prayerService?.getPrayerName(nextPrayer) ?: "Prayer"
+                    val time = nextPrayer.format(DateTimeFormatter.ofPattern("hh:mm a"))
+                    showBalloon("Next Prayer", "ppat $time")
+                } ?: showBalloon("Prayer Times", "No prayer times available")
+            }
+        }
+    }
+
+    private fun createSettingsItem(): MenuItem {
+        return MenuItem("Settings").apply {
+            addActionListener {
+                // TODO: Open settings dialog
+                JOptionPane.showMessageDialog(
+                    null,
+                    "Plugin settings will open here",
+                    "Aqim As-Salat Settings",
+                    JOptionPane.INFORMATION_MESSAGE
+                )
+            }
+        }
+    }
+
+    private fun createExitItem(): MenuItem {
+        return MenuItem("Exit").apply {
             addActionListener {
                 ApplicationManager.getApplication().exit()
             }
         }
+    }
 
-        val infoItem = MenuItem("Next Prayer Info").apply {
-            addActionListener {
-                JOptionPane.showMessageDialog(null, "Prayer info will appear here.")
+    private fun createTrayClickListener(): ActionListener {
+        return ActionListener {
+            prayerService?.getNextPrayerTime()?.let { nextPrayer ->
+//                val prayerName = prayerService?.getPrayerName(nextPrayer) ?: "Prayer"
+                val time = nextPrayer.format(DateTimeFormatter.ofPattern("hh:mm a"))
+                showBalloon("Next Prayer", "[pp at $time")
             }
-        }
-
-        popup.add(infoItem)
-        popup.add(exitItem)
-
-        trayIcon = TrayIcon(image, "Aqim As-Salat", popup).apply {
-            isImageAutoSize = true
-            toolTip = "Aqim As-Salat - Prayer Time Manager"
-        }
-
-        try {
-            tray.add(trayIcon)
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
     }
 
     fun showBalloon(title: String, message: String) {
-        trayIcon?.displayMessage(title, message, TrayIcon.MessageType.INFO)
+        if (trayIcon == null) {
+            logger.warn("Tray icon not initialized when showing balloon")
+            return
+        }
+
+        try {
+            trayIcon?.displayMessage(
+                title,
+                message,
+                TrayIcon.MessageType.INFO
+            )
+            logger.info("Showed tray notification: $title - $message")
+        } catch (e: Exception) {
+            logger.error("Failed to show tray notification", e)
+        }
+    }
+
+    fun dispose() {
+        try {
+            SystemTray.getSystemTray().remove(trayIcon)
+            trayIcon = null
+            logger.info("Tray icon disposed successfully")
+        } catch (e: Exception) {
+            logger.error("Failed to dispose tray icon", e)
+        }
     }
 }

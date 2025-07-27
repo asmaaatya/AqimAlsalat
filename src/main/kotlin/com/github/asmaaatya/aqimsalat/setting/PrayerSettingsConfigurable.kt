@@ -2,68 +2,69 @@ package com.github.asmaaatya.aqimsalat.setting
 
 
 import com.intellij.openapi.options.Configurable
+import java.awt.BorderLayout
 import java.awt.GridLayout
 import javax.swing.*
 
-class PrayerSettingsConfigurable : Configurable {
-    private val settings = PrayerSettingsState.getInstance().state
 
-    private lateinit var cityDropdown: JComboBox<String>
-    private lateinit var countryDropdown: JComboBox<String>
-    private lateinit var languageDropdown: JComboBox<String>
-    private lateinit var autoShutdownCheckbox: JCheckBox
-    private lateinit var methodBox: JComboBox<String>
-    private lateinit var playSoundCheckbox: JCheckBox
+class PrayerSettingsConfigurable : Configurable, Configurable.NoScroll {
+    private val settings = PrayerSettingsState.getInstance().state
+    private var initialized = false
+
+    // UI Components
+    private val cityDropdown = JComboBox<String>()
+    private val countryDropdown = JComboBox<String>(DEFAULT_COUNTRIES.toTypedArray())
+    private val languageDropdown = JComboBox<String>(LANGUAGES.keys.toTypedArray())
+    private val methodBox = JComboBox<String>(CALCULATION_METHODS.keys.toTypedArray())
+    private val autoShutdownCheckbox = JCheckBox("Enable Auto Shutdown")
+    private val playSoundCheckbox = JCheckBox("Play Adhan Sound")
+    private val minutesBeforeSpinner = JSpinner(SpinnerNumberModel(5, 0, 60, 5))
 
     override fun createComponent(): JComponent {
-        val panel = JPanel(GridLayout(0, 2, 10, 10))
-
-        // Country dropdown
-        val countries = listOf("Egypt", "Saudi Arabia", "United Arab Emirates", "Morocco", "Turkey")
-        countryDropdown = JComboBox(countries.toTypedArray())
+        // Initialize components
         countryDropdown.selectedItem = settings.country
+        languageDropdown.selectedItem = LANGUAGES.entries.find { it.value == settings.language }?.key ?: "English"
+        methodBox.selectedItem = CALCULATION_METHODS.entries.find { it.value == settings.method }?.key ?: "Egyptian (General Authority of Survey)"
+        autoShutdownCheckbox.isSelected = settings.autoShutdownEnabled
+        playSoundCheckbox.isSelected = settings.playSound
+        minutesBeforeSpinner.value = settings.notificationMinutesBefore
 
-        // City dropdown
-        val cities = listOf("Cairo", "Alexandria", "Makkah", "Dubai", "Riyadh", "Casablanca", "Istanbul")
-        cityDropdown = JComboBox(cities.toTypedArray())
-        cityDropdown.selectedItem = settings.city
+        // Set up city dropdown
+        updateCities(settings.country)
 
-        // Language dropdown
-        val languages = mapOf("English" to "en", "العربية" to "ar")
-        languageDropdown = JComboBox(languages.keys.toTypedArray())
-        languageDropdown.selectedItem = languages.entries.firstOrNull { it.value == settings.language }?.key
+        // Add listeners
+        countryDropdown.addActionListener { updateCities(countryDropdown.selectedItem as String) }
 
-        // Calculation Method dropdown
-        val methods = mapOf("ISNA (2)" to 2, "Egyptian (5)" to 5, "MWL (3)" to 3)
-        methodBox = JComboBox(methods.keys.toTypedArray())
-        methodBox.selectedItem = methods.entries.firstOrNull { it.value == settings.method }?.key
+        // Build panel
+        val panel = JPanel(GridLayout(0, 2, 10, 10)).apply {
+            border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
 
-        // Auto-shutdown toggle
-        autoShutdownCheckbox = JCheckBox("Enable Auto Shutdown", settings.autoShutdownEnabled)
+            add(JLabel("Country:"))
+            add(countryDropdown)
 
-        //sound
+            add(JLabel("City:"))
+            add(cityDropdown)
 
-        playSoundCheckbox = JCheckBox("Play Adhan Sound", settings.playSound)
+            add(JLabel("Language:"))
+            add(languageDropdown)
 
-        panel.add(JLabel("Country:"))
-        panel.add(countryDropdown)
+            add(JLabel("Calculation Method:"))
+            add(methodBox)
 
-        panel.add(JLabel("City:"))
-        panel.add(cityDropdown)
+            add(JLabel("Auto Shutdown:"))
+            add(autoShutdownCheckbox)
 
-        panel.add(JLabel("Language:"))
-        panel.add(languageDropdown)
+            add(JLabel("Notification Sound:"))
+            add(playSoundCheckbox)
 
-        panel.add(JLabel("Calculation Method:"))
-        panel.add(methodBox)
+            add(JLabel("Notify Before Prayer (minutes):"))
+            add(minutesBeforeSpinner)
+        }
 
-        panel.add(JLabel("Auto Shutdown:"))
-        panel.add(autoShutdownCheckbox)
-
-        panel.add(JLabel("Notification Sound:"));
-        panel.add(playSoundCheckbox)
-
-        return panel
+        initialized = true
+        return JPanel(BorderLayout()).apply {
+            add(panel, BorderLayout.NORTH)
+        }
     }
 
     override fun isModified(): Boolean {
@@ -72,31 +73,68 @@ class PrayerSettingsConfigurable : Configurable {
                 settings.language != getSelectedLanguageCode() ||
                 settings.method != getSelectedMethodValue() ||
                 settings.autoShutdownEnabled != autoShutdownCheckbox.isSelected ||
-                settings.playSound != playSoundCheckbox.isSelected
+                settings.playSound != playSoundCheckbox.isSelected ||
+                settings.notificationMinutesBefore != (minutesBeforeSpinner.value as? Int ?: 5)
     }
 
     override fun apply() {
-        settings.city = cityDropdown.selectedItem as String
-        settings.country = countryDropdown.selectedItem as String
+        settings.city = cityDropdown.selectedItem as? String ?: "Cairo"
+        settings.country = countryDropdown.selectedItem as? String ?: "Egypt"
         settings.language = getSelectedLanguageCode()
         settings.method = getSelectedMethodValue()
         settings.autoShutdownEnabled = autoShutdownCheckbox.isSelected
         settings.playSound = playSoundCheckbox.isSelected
+        settings.notificationMinutesBefore = (minutesBeforeSpinner.value as? Int) ?: 5
     }
 
-    private fun getSelectedLanguageCode(): String {
-        val selected = languageDropdown.selectedItem as String
-        return if (selected == "العربية") "ar" else "en"
+    override fun getDisplayName(): String = "Aqim As-Salat Settings"
+
+    override fun reset() {
+        countryDropdown.selectedItem = settings.country
+        cityDropdown.selectedItem = settings.city
+        languageDropdown.selectedItem = LANGUAGES.entries.find { it.value == settings.language }?.key ?: "English"
+        methodBox.selectedItem = CALCULATION_METHODS.entries.find { it.value == settings.method }?.key ?: "Egyptian (General Authority of Survey)"
+        autoShutdownCheckbox.isSelected = settings.autoShutdownEnabled
+        playSoundCheckbox.isSelected = settings.playSound
+        minutesBeforeSpinner.value = settings.notificationMinutesBefore
     }
 
-    private fun getSelectedMethodValue(): Int {
-        return when (methodBox.selectedItem as String) {
-            "ISNA (2)" -> 2
-            "Egyptian (5)" -> 5
-            "MWL (3)" -> 3
-            else -> 5
+    private fun updateCities(country: String) {
+        if (!initialized) return
+
+        val cities = when (country) {
+            "Egypt" -> arrayOf("Cairo", "Alexandria", "Giza", "Luxor")
+            "Saudi Arabia" -> arrayOf("Makkah", "Madinah", "Riyadh", "Jeddah")
+            "United Arab Emirates" -> arrayOf("Dubai", "Abu Dhabi", "Sharjah")
+            "Morocco" -> arrayOf("Casablanca", "Rabat", "Marrakesh")
+            "Turkey" -> arrayOf("Istanbul", "Ankara", "Izmir")
+            else -> arrayOf("Cairo")
+        }
+
+        cityDropdown.model = DefaultComboBoxModel(cities)
+        if (cities.contains(settings.city)) {
+            cityDropdown.selectedItem = settings.city
+        } else {
+            cityDropdown.selectedIndex = 0
         }
     }
 
-    override fun getDisplayName(): String = "Aqim As-Salat"
+    private fun getSelectedLanguageCode(): String {
+        return LANGUAGES[languageDropdown.selectedItem as? String] ?: "en"
+    }
+
+    private fun getSelectedMethodValue(): Int {
+        return CALCULATION_METHODS[methodBox.selectedItem as? String] ?: 5
+    }
+
+    companion object {
+        private val DEFAULT_COUNTRIES = listOf("Egypt", "Saudi Arabia", "United Arab Emirates", "Morocco", "Turkey")
+        private val LANGUAGES = mapOf("English" to "en", "العربية" to "ar")
+        private val CALCULATION_METHODS = mapOf(
+            "ISNA (North America)" to 2,
+            "MWL (Muslim World League)" to 3,
+            "Umm Al-Qura (Saudi Arabia)" to 4,
+            "Egyptian (General Authority of Survey)" to 5
+        )
+    }
 }
