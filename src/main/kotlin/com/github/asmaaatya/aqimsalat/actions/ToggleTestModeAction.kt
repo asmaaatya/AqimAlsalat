@@ -8,19 +8,16 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.Messages
 
 class TestModeAction : AnAction() {
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
         val service = project.service<MyProjectService>()
-
-        if (service.testMode) {
-            service.disableTestMode()
-            showNotification(project, "Test mode disabled", "Using real prayer times")
-        } else {
-            service.enableTestMode()
-            showNotification(project, "Test mode enabled", "Using simulated prayer times")
+        val times = service.getPrayersForDisplay().joinToString("\n") {
+            "${it.first}: ${it.second}"
         }
+        Messages.showInfoMessage(project, times, "Prayer Times")
     }
 
     override fun update(e: AnActionEvent) {
@@ -31,13 +28,15 @@ class TestModeAction : AnAction() {
         if (service != null) {
             e.presentation.text = if (service.testMode)
                 "Disable Test Mode" else "Enable Test Mode"
+            e.presentation.description = if (service.testMode)
+                "Switch back to real prayer times" else "Enable test prayer times"
         }
     }
 
     private fun showNotification(project: Project, title: String, message: String) {
         Notifications.Bus.notify(
             Notification(
-                "PrayerTimeTest",
+                "PrayerTimeTest",  // Must match the ID in plugin.xml
                 title,
                 message,
                 NotificationType.INFORMATION
@@ -45,4 +44,6 @@ class TestModeAction : AnAction() {
             project
         )
     }
+
+
 }

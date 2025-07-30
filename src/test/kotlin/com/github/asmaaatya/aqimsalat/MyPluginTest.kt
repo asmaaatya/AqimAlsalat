@@ -1,39 +1,36 @@
 package com.github.asmaaatya.aqimsalat
 
-import com.intellij.ide.highlighter.XmlFileType
-import com.intellij.openapi.components.service
-import com.intellij.psi.xml.XmlFile
-import com.intellij.testFramework.TestDataPath
-import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import com.intellij.util.PsiErrorElementUtil
 import com.github.asmaaatya.aqimsalat.services.MyProjectService
+import com.intellij.openapi.components.service
+import com.intellij.testFramework.fixtures.BasePlatformTestCase
+import java.time.LocalTime
 
-@TestDataPath("\$CONTENT_ROOT/src/test/testData")
 class MyPluginTest : BasePlatformTestCase() {
+    private lateinit var service: MyProjectService
 
-    fun testXMLFile() {
-        val psiFile = myFixture.configureByText(XmlFileType.INSTANCE, "<foo>bar</foo>")
-        val xmlFile = assertInstanceOf(psiFile, XmlFile::class.java)
-
-        assertFalse(PsiErrorElementUtil.hasErrors(project, xmlFile.virtualFile))
-
-        assertNotNull(xmlFile.rootTag)
-
-        xmlFile.rootTag?.let {
-            assertEquals("foo", it.name)
-            assertEquals("bar", it.value.text)
-        }
+    override fun setUp() {
+        super.setUp()
+        service = project.service<MyProjectService>()
     }
 
-    fun testRename() {
-        myFixture.testRename("foo.xml", "foo_after.xml", "a2")
+    fun testPrayerTimeFetching() {
+        // Test that prayer times are loaded
+        assertTrue(service.getAllPrayerTimes().isNotEmpty())
     }
 
-    fun testProjectService() {
-        val projectService = project.service<MyProjectService>()
-
-        assertNotSame(projectService.getRandomNumber(), projectService.getRandomNumber())
+    fun testNextPrayerTimeCalculation() {
+        val nextPrayer = service.getNextPrayerTime()
+        assertNotNull(nextPrayer)
+        assertTrue(nextPrayer is LocalTime)
     }
 
-    override fun getTestDataPath() = "src/test/testData/rename"
+    fun testTestModeToggle() {
+        // Verify test mode works
+        assertFalse(service.testMode)
+        service.enableTestMode()
+        assertTrue(service.testMode)
+
+        val testTimes = service.getPrayersForDisplay()
+        assertEquals(5, testTimes.size)
+    }
 }

@@ -1,23 +1,27 @@
-<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.asmaaatya.aqimsalat</id>
     <name>Aqim As-Salat</name>
     <vendor>asmaaatya</vendor>
-<!--    <icon path="/icons/icon.png"/>-->
-    <depends>com.intellij.modules.platform</depends>
 
+    <depends>com.intellij.modules.platform</depends>
     <resource-bundle>messages.MyBundle</resource-bundle>
 
+
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.asmaaatya.aqimsalat.toolWindow.PrayerTimeToolWindowFactory" id="MyToolWindow"/>
-        <startupActivity implementation="com.github.asmaaatya.aqimsalat.startup.MyProjectActivity" />
-        <applicationService serviceImplementation="com.github.asmaaatya.aqimsalat.services.MyProjectService"/>
+        <toolWindow factoryClass="com.github.asmaaatya.aqimsalat.toolWindow.PrayerTimeToolWindowFactory" id="PrayerTimesToolWindow"/>
         <applicationConfigurable instance="com.github.asmaaatya.aqimsalat.setting.PrayerSettingsConfigurable"/>
+        <notificationGroup id="PrayerTimeTest" displayType="BALLOON" isLogByDefault="true"/>
     </extensions>
 
-    <description>Aqim As-Salat is a plugin that helps Muslim developers stay mindful of daily prayers during coding.</description>
+    <actions>
+        <action id="AqimAsSalat.ShowTimes"
+            class="com.github.asmaaatya.aqimsalat.actions.TestModeAction"
+            text="Show Prayer Times">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+    </actions>
 
-
+    <description>A plugin to remind developers of Islamic prayer times inside the IDE.</description>
     <change-notes><![CDATA[
         Initial release:
         <ul>
@@ -26,14 +30,4 @@
             <li>Settings panel for customizations</li>
         </ul>
     ]]></change-notes>
-
-    <actions>
-    <!-- ... other actions ... -->
-    <action id="PrayerTime.ToggleTestMode"
-        class="com.github.asmaaatya.aqimsalat.actions.TestModeAction"
-        text="Toggle Test Mode"
-        description="Enable/disable prayer time test mode">
-        <add-to-group group-id="ToolsMenu" anchor="last"/>
-    </action>
-</actions>
 </idea-plugin>
