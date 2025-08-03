@@ -10,6 +10,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow factoryClass="com.github.asmaaatya.aqimsalat.toolWindow.PrayerTimeToolWindowFactory" id="PrayerTimesToolWindow"/>
         <applicationConfigurable instance="com.github.asmaaatya.aqimsalat.setting.PrayerSettingsConfigurable"/>
+        <projectService serviceImplementation="com.github.asmaaatya.aqimsalat.startup.MyProjectActivity"/>
         <notificationGroup id="PrayerTimeTest" displayType="BALLOON" isLogByDefault="true"/>
     </extensions>
 
