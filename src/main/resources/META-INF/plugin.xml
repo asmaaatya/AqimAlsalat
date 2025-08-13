@@ -1,29 +1,22 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.asmaaatya.aqimsalat</id>
-    <name>Aqim As-Salat</name>
-    <vendor>asmaaatya</vendor>
-    <icon path="/icons/icon.png"/>
-    <depends>com.intellij.modules.platform</depends>
+    <id>com.asmaaatya.aqimalsalat</id>
+    <name>Aqim Alsalat</name>
+    <vendor email="asmaaatya26@gmail.com" url="https://github.com/asmaaatya">Asmaa Atya</vendor>
+    <version>1.0.0</version>
 
-    <resource-bundle>messages.MyBundle</resource-bundle>
+    <description>
+        Aqim As-Salat is a spiritual productivity plugin for Muslim developers that provides
+        prayer time notifications, IDE shutdown reminders, and location-based Salat schedules.
+    </description>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.asmaaatya.aqimsalat.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <startupActivity implementation="com.github.asmaaatya.aqimsalat.startup.MyProjectActivity" />
-        <applicationService serviceImplementation="com.github.asmaaatya.aqimsalat.setting.PrayerSettingsState"/>
-        <applicationConfigurable instance="com.github.asmaaatya.aqimsalat.setting.PrayerSettingsConfigurable"/>
+        <applicationConfigurable
+            id="AqimAlsalatSettings"
+            displayName="Aqim Alsalat"
+            instance="com.github.asmaaatya.aqimsalat.setting.SettingsConfigurable"/>
+        <postStartupActivity implementation="com.github.asmaaatya.aqimsalat.startup.MyProjectActivity"/>
+        <applicationService serviceImplementation="com.github.asmaaatya.aqimsalat.services.PrayerService"/>
     </extensions>
-
-    <description>Aqim As-Salat is a plugin that helps Muslim developers stay mindful of daily prayers during coding.</description>
-
-
-    <change-notes><![CDATA[
-        Initial release:
-        <ul>
-            <li>Prayer time notifications with calculation method support</li>
-            <li>IDE alert and optional auto-close</li>
-            <li>Settings panel for customizations</li>
-        </ul>
-    ]]></change-notes>
 </idea-plugin>
+

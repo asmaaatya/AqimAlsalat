@@ -1,33 +1,27 @@
 package com.github.asmaaatya.aqimsalat.setting
+import com.intellij.openapi.components.PersistentStateComponent
+import com.intellij.openapi.components.State
+import com.intellij.openapi.components.Storage
 
+@State(name = "AqimAlsalatSettings", storages = [Storage("AqimAlsalatSettings.xml")])
+class SettingsState : PersistentStateComponent<SettingsState> {
+    var city: String = "Cairo"
+    var country: String = "Egypt"
+    var method: Int = 5
+    var shutdownOnPrayer: Boolean = false
 
-import com.intellij.openapi.components.*
+    override fun getState(): SettingsState = this
 
-@State(
-    name = "PrayerSettings",
-    storages = [Storage("PrayerSettings.xml")]
-)
-@Service
-class PrayerSettingsState : PersistentStateComponent<PrayerSettingsState.State> {
-
-    data class State(
-        var city: String = "Cairo",
-        var country: String = "Egypt",
-        var language: String = "en",
-        var autoShutdownEnabled: Boolean = true,
-        var method:Int = 5,
-        var playSound: Boolean = true
-    )
-
-    private var state = State()
-
-    override fun getState(): State = state
-    override fun loadState(state: State) {
-        this.state = state
+    override fun loadState(state: SettingsState) {
+        this.city = state.city
+        this.country = state.country
+        this.method = state.method
+        this.shutdownOnPrayer = state.shutdownOnPrayer
     }
 
     companion object {
-        fun getInstance(): PrayerSettingsState =
-            ServiceManager.getService(PrayerSettingsState::class.java)
+        fun getInstance(): SettingsState =
+            com.intellij.openapi.application.ApplicationManager.getApplication().getService(SettingsState::class.java)
     }
 }
+

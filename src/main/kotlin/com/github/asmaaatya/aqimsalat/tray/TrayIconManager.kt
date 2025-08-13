@@ -5,52 +5,43 @@ import com.intellij.openapi.application.ApplicationManager
 import java.awt.MenuItem
 import java.awt.PopupMenu
 import java.awt.SystemTray
+import java.awt.Toolkit
 import java.awt.TrayIcon
 import javax.imageio.ImageIO
 import javax.swing.JOptionPane
 
-object TrayIconManager {
 
+object PrayerTray {
     private var trayIcon: TrayIcon? = null
 
-    fun setupTrayIcon() {
+    fun init() {
         if (!SystemTray.isSupported()) return
-
-        if (trayIcon != null) return
-
-        val tray = SystemTray.getSystemTray()
-        val image = ImageIO.read(TrayIconManager::class.java.getResource("/icons/icon.png"))
 
         val popup = PopupMenu()
 
-        val exitItem = MenuItem("Exit Android Studio").apply {
-            addActionListener {
-                ApplicationManager.getApplication().exit()
-            }
+        val settingsItem = MenuItem("Settings")
+        settingsItem.addActionListener {
+            JOptionPane.showMessageDialog(null, "Open Settings from IDE Settings > Tools > Aqim Alsalat")
         }
+        popup.add(settingsItem)
 
-        val infoItem = MenuItem("Next Prayer Info").apply {
-            addActionListener {
-                JOptionPane.showMessageDialog(null, "Prayer info will appear here.")
-            }
+        val exitItem = MenuItem("Exit Aqim Alsalat")
+        exitItem.addActionListener {
+            SystemTray.getSystemTray().remove(trayIcon)
         }
-
-        popup.add(infoItem)
         popup.add(exitItem)
 
-        trayIcon = TrayIcon(image, "Aqim As-Salat", popup).apply {
-            isImageAutoSize = true
-            toolTip = "Aqim As-Salat - Prayer Time Manager"
-        }
+        val image = Toolkit.getDefaultToolkit().getImage(
+            PrayerTray::class.java.getResource("/icons/tray_icon.png")
+        )
+        trayIcon = TrayIcon(image, "Aqim Alsalat", popup)
+        trayIcon!!.isImageAutoSize = true
 
-        try {
-            tray.add(trayIcon)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        SystemTray.getSystemTray().add(trayIcon)
     }
 
-    fun showBalloon(title: String, message: String) {
+    fun showMessage(title: String, message: String) {
         trayIcon?.displayMessage(title, message, TrayIcon.MessageType.INFO)
     }
 }
+

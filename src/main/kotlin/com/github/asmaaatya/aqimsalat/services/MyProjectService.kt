@@ -1,17 +1,30 @@
 package com.github.asmaaatya.aqimsalat.services
 
-import com.intellij.openapi.components.Service
-import com.intellij.openapi.diagnostic.thisLogger
-import com.intellij.openapi.project.Project
-import com.github.asmaaatya.aqimsalat.MyBundle
+import com.google.gson.Gson
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
-@Service(Service.Level.PROJECT)
-class MyProjectService(project: Project) {
+data class PrayerTimings(val Fajr: String, val Dhuhr: String, val Asr: String, val Maghrib: String, val Isha: String)
+data class PrayerData(val timings: PrayerTimings)
+data class PrayerResponse(val data: PrayerData)
 
-    init {
-        thisLogger().info(MyBundle.message("projectService", project.name))
-        thisLogger().warn("Don't forget to remove all non-needed sample code files with their corresponding registration entries in `plugin.xml`.")
+object PrayerService {
+    private val client = OkHttpClient()
+    private val gson = Gson()
+
+    fun getPrayerTimes(city: String, country: String, method: Int = 5): PrayerTimings? {
+        val date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+        val url = "https://api.aladhan.com/v1/timingsByCity/$date?city=$city&country=$country&method=$method"
+
+        val request = Request.Builder().url(url).build()
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) return null
+            val body = response.body?.string() ?: return null
+            val parsed = gson.fromJson(body, PrayerResponse::class.java)
+            return parsed.data.timings
+        }
     }
-
-    fun getRandomNumber() = (1..100).random()
 }
+
