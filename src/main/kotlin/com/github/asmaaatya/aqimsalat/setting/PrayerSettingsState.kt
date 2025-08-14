@@ -9,6 +9,7 @@ class SettingsState : PersistentStateComponent<SettingsState> {
     var country: String = "Egypt"
     var method: Int = 5
     var shutdownOnPrayer: Boolean = false
+    var playSound: Boolean = true
 
     override fun getState(): SettingsState = this
 

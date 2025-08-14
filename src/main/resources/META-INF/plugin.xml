@@ -17,6 +17,13 @@
             instance="com.github.asmaaatya.aqimsalat.setting.SettingsConfigurable"/>
         <postStartupActivity implementation="com.github.asmaaatya.aqimsalat.startup.MyProjectActivity"/>
         <applicationService serviceImplementation="com.github.asmaaatya.aqimsalat.services.PrayerService"/>
+        <notificationGroup
+            id="AqimAlsalat"
+            displayName="Aqim Alsalat Notifications"
+            isLogByDefault="true"
+            displayType="BALLOON"/>
     </extensions>
+
+
 </idea-plugin>
 

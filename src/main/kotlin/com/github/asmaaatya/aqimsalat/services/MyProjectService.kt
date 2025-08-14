@@ -1,30 +1,74 @@
 package com.github.asmaaatya.aqimsalat.services
 
+import com.github.asmaaatya.aqimsalat.api.PrayerApiClient
 import com.google.gson.Gson
+import com.intellij.openapi.components.Service
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
-data class PrayerTimings(val Fajr: String, val Dhuhr: String, val Asr: String, val Maghrib: String, val Isha: String)
-data class PrayerData(val timings: PrayerTimings)
-data class PrayerResponse(val data: PrayerData)
-
-object PrayerService {
-    private val client = OkHttpClient()
-    private val gson = Gson()
-
-    fun getPrayerTimes(city: String, country: String, method: Int = 5): PrayerTimings? {
-        val date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-        val url = "https://api.aladhan.com/v1/timingsByCity/$date?city=$city&country=$country&method=$method"
-
-        val request = Request.Builder().url(url).build()
-        client.newCall(request).execute().use { response ->
-            if (!response.isSuccessful) return null
-            val body = response.body?.string() ?: return null
-            val parsed = gson.fromJson(body, PrayerResponse::class.java)
-            return parsed.data.timings
-        }
+data class PrayerTimings(
+    val Fajr: String,
+    val Dhuhr: String,
+    val Asr: String,
+    val Maghrib: String,
+    val Isha: String
+){
+    fun toLocalTimeList(): List<LocalTime> {
+        val formatter = DateTimeFormatter.ofPattern("HH:mm")
+        return listOfNotNull(
+            Fajr.let { LocalTime.parse(it, formatter) },
+            Dhuhr.let { LocalTime.parse(it, formatter) },
+            Asr.let { LocalTime.parse(it, formatter) },
+            Maghrib.let { LocalTime.parse(it, formatter) },
+            Isha.let { LocalTime.parse(it, formatter) }
+        )
     }
 }
 
+data class PrayerData(val timings: PrayerTimings)
+data class PrayerResponse(val data: PrayerData)
+@Service(Service.Level.APP)
+class PrayerService {
+
+    /**
+     * Fetch prayer times asynchronously (non-blocking).
+     * @param city Name of the city
+     * @param country Name of the country
+     * @param method Calculation method (default 5)
+     * @return CompletableFuture<PrayerTimings?>
+     */
+    fun getPrayerTimesAsync(
+        city: String,
+        country: String,
+        method: Int = 5
+    ): CompletableFuture<PrayerTimings?> {
+        return CompletableFuture.supplyAsync {
+            try {
+                val response = PrayerApiClient.service
+                    .getPrayerTimes(city, country)
+                    .execute()
+
+                if (response.isSuccessful) {
+                    val body = response.body()
+                    body?.data?.timings?.let { timings ->
+                        PrayerTimings(
+                            Fajr = timings.fajr,
+                            Dhuhr = timings.dhuhr,
+                            Asr = timings.asr,
+                            Maghrib = timings.maghrib,
+                            Isha = timings.isha
+                        )
+                    }
+                } else null
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+    }
+}
