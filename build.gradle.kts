@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.asmaaatya"
-version = "1.0.0"
+version = "0.0.6"
 
 repositories {
     mavenCentral()
