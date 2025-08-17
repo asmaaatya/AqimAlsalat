@@ -39,15 +39,15 @@ class PrayerTimeManager(
                 val timesList = timings?.toLocalTimeList() ?: emptyList()
                 fetchedPrayerTimes = timesList
 
-                SwingUtilities.invokeLater {
-                    JOptionPane.showMessageDialog(
-                        null,
-                        if (timesList.isNotEmpty()) "Fetch success: $timesList" else "Fetch failed, timings empty",
-                        "Aqim Alsalat",
-                        JOptionPane.INFORMATION_MESSAGE
-                    )
-//                    PrayerTray.showMessage("Aqim Alsalat", "It’s time for ${getPrayerName(LocalTime.now().withSecond(0).withNano(0))}")
-                }
+//                SwingUtilities.invokeLater {
+//                    JOptionPane.showMessageDialog(
+//                        null,
+//                        if (timesList.isNotEmpty()) "Fetch success: $timesList" else "Fetch failed, timings empty",
+//                        "Aqim Alsalat",
+//                        JOptionPane.INFORMATION_MESSAGE
+//                    )
+////                    PrayerTray.showMessage("Aqim Alsalat", "It’s time for ${getPrayerName(LocalTime.now().withSecond(0).withNano(0))}")
+//                }
 
                 onResult(timesList)
 
@@ -116,7 +116,7 @@ class PrayerTimeManager(
                             SwingUtilities.invokeLater {
                                 FocusModeDialog(project = project, getPrayerName(
                                     prayerTime
-                                ), 1).show()
+                                ), 15).show()
                             }
                             val settings = SettingsState.getInstance()
 
@@ -125,9 +125,10 @@ class PrayerTimeManager(
                                     ApplicationManager.getApplication().exit()
                                 }
                             }
-                        }else{
-                        showNotification("[AqimAlsalat]not Prayer time: $prayerTime")
                         }
+//                        else{
+//                        showNotification("[AqimAlsalat]not Prayer time: $prayerTime")
+//                        }
                     }
 
                     // Refresh times at midnight

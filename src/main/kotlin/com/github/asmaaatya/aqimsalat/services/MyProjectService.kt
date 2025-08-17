@@ -1,16 +1,10 @@
 package com.github.asmaaatya.aqimsalat.services
 
 import com.github.asmaaatya.aqimsalat.api.PrayerApiClient
-import com.github.asmaaatya.aqimsalat.api.PrayerTimesResponse
-import com.google.gson.Gson
 import com.intellij.openapi.components.Service
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executors
 
 data class PrayerTimings(
     val Fajr: String,

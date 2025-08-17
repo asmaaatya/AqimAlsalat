@@ -1,12 +1,21 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.asmaaatya.aqimalsalat</id>
+    <id>com.github.asmaaatya.aqimsalat</id>
     <name>Aqim Alsalat</name>
     <vendor email="asmaaatya26@gmail.com" url="https://github.com/asmaaatya">Asmaa Atya Mohammed</vendor>
     <version>0.0.6</version>
 
     <!-- Plugin category -->
     <category>Islamic</category>
+
+
+    <idea-version since-build="242" />
+
+
+    <!-- Required dependency -->
+    <depends>com.intellij.modules.platform</depends>
+
+
 
     <description>
         Aqim As-Salat is a spiritual productivity plugin for Muslim developers that provides
