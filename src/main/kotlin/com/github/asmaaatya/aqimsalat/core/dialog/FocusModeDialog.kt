@@ -1,5 +1,6 @@
 package com.github.asmaaatya.aqimsalat.core.dialog
 
+import com.github.asmaaatya.aqimsalat.lang.MyBundle
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import java.awt.BorderLayout
@@ -88,7 +89,8 @@ class FocusModeDialog(
     private fun playAdhanSound() {
         try {
             val audioStream = AudioSystem.getAudioInputStream(
-                BufferedInputStream(javaClass.getResourceAsStream("sounds/main_sound.mp3")))
+                javaClass.getResourceAsStream("sounds/main_sound.mp3")
+                    ?.let { BufferedInputStream(it) })
             val clip: Clip = AudioSystem.getClip()
             clip.open(audioStream)
             clip.start()

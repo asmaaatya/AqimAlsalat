@@ -1,12 +1,13 @@
-package com.github.asmaaatya.aqimsalat
+package com.github.asmaaatya.aqimsalat.lang
+
 
 import com.intellij.DynamicBundle
-import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.PropertyKey
+
+import org.jetbrains.annotations.NonNls
 
 @NonNls
 private const val BUNDLE = "messages.MyBundle"
-
 object MyBundle : DynamicBundle(BUNDLE) {
 
     @JvmStatic

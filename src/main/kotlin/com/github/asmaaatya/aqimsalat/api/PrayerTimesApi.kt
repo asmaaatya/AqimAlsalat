@@ -10,5 +10,6 @@ interface PrayerTimesApi {
     fun getPrayerTimes(
         @Query("city") city: String,
         @Query("country") country: String,
+        @Query("method") method: Int
     ): Call<PrayerTimesResponse>
 }

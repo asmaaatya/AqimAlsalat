@@ -12,7 +12,7 @@ import com.intellij.openapi.components.Storage
 class SettingsState : PersistentStateComponent<SettingsState> {
 
     var city: String = "Cairo"
-    var country: String = "Egypt"
+    var country: String = "EG"
     var method: Int = 5
     var shutdownOnPrayer: Boolean = false
     var playSound: Boolean = true
@@ -28,10 +28,10 @@ class SettingsState : PersistentStateComponent<SettingsState> {
     }
 
     companion object {
-        // Safe, non-null (throws if app is not ready, but we're calling after startup)
         fun getInstance(): SettingsState =
             ApplicationManager.getApplication().getService(SettingsState::class.java)
     }
+
 }
 
 

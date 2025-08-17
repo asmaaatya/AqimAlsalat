@@ -3,6 +3,7 @@ package com.github.asmaaatya.aqimsalat.core
 import com.github.asmaaatya.aqimsalat.core.dialog.FocusModeDialog
 import com.github.asmaaatya.aqimsalat.services.PrayerService
 import com.github.asmaaatya.aqimsalat.setting.SettingsState
+import com.github.asmaaatya.aqimsalat.tray.PrayerTray
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationType
 import com.intellij.notification.Notifications
@@ -18,23 +19,21 @@ class PrayerTimeManager(
     private var fetchedPrayerTimes: List<LocalTime> = emptyList()
 
     init {
+//        startTestPrayerCheckLoop()
         startPrayerCheckLoop()
     }
 
     private fun fetchPrayerTimes(onResult: (List<LocalTime>) -> Unit) {
         val settings = SettingsState.getInstance()
-        val city = settings.state.city.ifBlank { "Cairo" }
-        val country = settings.state.country.ifBlank { "Egypt" }
+        val city = settings.city
+        val country = settings.country
+        val method = settings.method
 
         ApplicationManager.getApplication().executeOnPooledThread {
-            println("[AqimAlsalat] Fetching prayer times for $city, $country")
+            showNotification("[AqimAlsalat] Fetching prayer times for $city, $country")
             try {
-                // Get the actual result (blocking here)
                 val prayerService = ApplicationManager.getApplication().getService(PrayerService::class.java)
-//                prayerService.getPrayerTimesAsync("London", "GB").thenAccept { timings ->
-//                    println(timings)
-//                }
-                val timings = prayerService.getPrayerTimesAsync("London", "GB").get()
+                val timings = prayerService.getPrayerTimesAsync(city, country, method).get()
                 showNotification("[AqimAlsalat] Prayer times result: $timings")
 
                 val timesList = timings?.toLocalTimeList() ?: emptyList()
@@ -47,6 +46,7 @@ class PrayerTimeManager(
                         "Aqim Alsalat",
                         JOptionPane.INFORMATION_MESSAGE
                     )
+//                    PrayerTray.showMessage("Aqim Alsalat", "It’s time for ${getPrayerName(LocalTime.now().withSecond(0).withNano(0))}")
                 }
 
                 onResult(timesList)
@@ -68,7 +68,7 @@ class PrayerTimeManager(
 
 
 
-    private fun startPrayerCheckLoop() {
+    private fun startTestPrayerCheckLoop() {
         // Set a test prayer time 1 minute from now
         val testTime = LocalTime.now().plusMinutes(1).withSecond(0).withNano(0)
         fetchedPrayerTimes = listOf(testTime)
@@ -88,6 +88,13 @@ class PrayerTimeManager(
                             FocusModeDialog(project = project, "Fajr", 1).show()
                         }
                         showNotification("[TEST] Prayer time reached: $prayerTime")
+                        val settings = SettingsState.getInstance()
+
+                        if (settings.state.shutdownOnPrayer) {
+                            ApplicationManager.getApplication().invokeLater {
+                                ApplicationManager.getApplication().exit()
+                            }
+                        }
                     }
                 }
             }
@@ -95,40 +102,46 @@ class PrayerTimeManager(
     }
 
 
-//    private fun startPrayerCheckLoop() {
-//        fetchPrayerTimes { prayerTimes ->
-//            val triggered = mutableSetOf<LocalTime>()
-//
-//            java.util.Timer().scheduleAtFixedRate(object : java.util.TimerTask() {
-//                override fun run() {
-//                    val now = LocalTime.now().withSecond(0).withNano(0)
-//
-//                    for (prayerTime in prayerTimes) {
-//                        if (now == prayerTime && prayerTime !in triggered) {
-//                            triggered.add(prayerTime)
-//                            SwingUtilities.invokeLater {
-//                                FocusModeDialog(
-//                                    prayerName = getPrayerName(prayerTime),
-//                                    focusMinutes = 15
-//                                ).showAndGet()
-//                            }
-//                        }else{
-//                        showNotification("[AqimAlsalat]noy Prayer time: $prayerTime")
-//                        }
-//                    }
-//
-//                    // Refresh times at midnight
-//                    if (now == LocalTime.MIDNIGHT) {
-//                        triggered.clear()
-//                        fetchPrayerTimes { updated ->
-//                            prayerTimes.toMutableList().clear()
-//                            prayerTimes.toMutableList().addAll(updated)
-//                        }
-//                    }
-//                }
-//            }, 0, 60_000)
-//        }
-//    }
+    private fun startPrayerCheckLoop() {
+        fetchPrayerTimes { prayerTimes ->
+            val triggered = mutableSetOf<LocalTime>()
+
+            java.util.Timer().scheduleAtFixedRate(object : java.util.TimerTask() {
+                override fun run() {
+                    val now = LocalTime.now().withSecond(0).withNano(0)
+
+                    for (prayerTime in prayerTimes) {
+                        if (now == prayerTime && prayerTime !in triggered) {
+                            triggered.add(prayerTime)
+                            SwingUtilities.invokeLater {
+                                FocusModeDialog(project = project, getPrayerName(
+                                    prayerTime
+                                ), 1).show()
+                            }
+                            val settings = SettingsState.getInstance()
+
+                            if (settings.state.shutdownOnPrayer) {
+                                ApplicationManager.getApplication().invokeLater {
+                                    ApplicationManager.getApplication().exit()
+                                }
+                            }
+                        }else{
+                        showNotification("[AqimAlsalat]not Prayer time: $prayerTime")
+                        }
+                    }
+
+                    // Refresh times at midnight
+                    if (now == LocalTime.MIDNIGHT) {
+                        triggered.clear()
+                        fetchPrayerTimes { updated ->
+                            prayerTimes.toMutableList().clear()
+                            prayerTimes.toMutableList().addAll(updated)
+                        }
+                    }
+                }
+            }, 0, 60_000)
+        }
+    }
 
 
     private fun getPrayerName(time: LocalTime): String {

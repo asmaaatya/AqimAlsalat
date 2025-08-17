@@ -2,8 +2,11 @@
 <idea-plugin>
     <id>com.asmaaatya.aqimalsalat</id>
     <name>Aqim Alsalat</name>
-    <vendor email="asmaaatya26@gmail.com" url="https://github.com/asmaaatya">Asmaa Atya</vendor>
-    <version>1.0.0</version>
+    <vendor email="asmaaatya26@gmail.com" url="https://github.com/asmaaatya">Asmaa Atya Mohammed</vendor>
+    <version>0.0.6</version>
+
+    <!-- Plugin category -->
+    <category>Islamic</category>
 
     <description>
         Aqim As-Salat is a spiritual productivity plugin for Muslim developers that provides
@@ -16,14 +19,12 @@
             displayName="Aqim Alsalat"
             instance="com.github.asmaaatya.aqimsalat.setting.SettingsConfigurable"/>
         <postStartupActivity implementation="com.github.asmaaatya.aqimsalat.startup.MyProjectActivity"/>
-<!--        <applicationService serviceImplementation="com.github.asmaaatya.aqimsalat.services.PrayerService"/>-->
         <notificationGroup
             id="AqimAlsalat"
             displayName="Aqim Alsalat Notifications"
             isLogByDefault="true"
             displayType="BALLOON"/>
-    </extensions>
-
+    </extensions>>
 
 </idea-plugin>
 

@@ -1,6 +1,7 @@
 package com.github.asmaaatya.aqimsalat.services
 
 import com.github.asmaaatya.aqimsalat.api.PrayerApiClient
+import com.github.asmaaatya.aqimsalat.api.PrayerTimesResponse
 import com.google.gson.Gson
 import com.intellij.openapi.components.Service
 import okhttp3.OkHttpClient
@@ -30,8 +31,6 @@ data class PrayerTimings(
     }
 }
 
-data class PrayerData(val timings: PrayerTimings)
-data class PrayerResponse(val data: PrayerData)
 @Service(Service.Level.APP)
 class PrayerService {
 
@@ -45,12 +44,12 @@ class PrayerService {
     fun getPrayerTimesAsync(
         city: String,
         country: String,
-        method: Int = 5
+        method: Int
     ): CompletableFuture<PrayerTimings?> {
         return CompletableFuture.supplyAsync {
             try {
                 val response = PrayerApiClient.service
-                    .getPrayerTimes(city, country)
+                    .getPrayerTimes(city, country, method)
                     .execute()
 
                 if (response.isSuccessful) {
@@ -64,11 +63,15 @@ class PrayerService {
                             Isha = timings.isha
                         )
                     }
-                } else null
+                } else {
+                    println("❌ API Error: ${response.code()} - ${response.errorBody()?.string()}")
+                    null
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
                 null
             }
         }
     }
+
 }
