@@ -23,8 +23,8 @@ class PrayerTimeManager(
 
     private fun fetchPrayerTimes(onResult: (List<LocalTime>) -> Unit) {
         val settings = SettingsState.getInstance()
-        val city = settings.city.ifBlank { "Cairo" }
-        val country = settings.country.ifBlank { "Egypt" }
+        val city = settings.state.city.ifBlank { "Cairo" }
+        val country = settings.state.country.ifBlank { "Egypt" }
 
         ApplicationManager.getApplication().executeOnPooledThread {
             println("[AqimAlsalat] Fetching prayer times for $city, $country")

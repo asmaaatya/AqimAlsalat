@@ -11,43 +11,46 @@ class SettingsConfigurable : Configurable {
     private val countryField = JBTextField()
     private val methodField = JBTextField()
     private val shutdownCheckbox = JBCheckBox("Shutdown on prayer time")
+    private val soundCheckbox = JBCheckBox("Play Adhan sound")
 
-    override fun getDisplayName(): String = "Aqim Alsalat Settings"
+    override fun getDisplayName(): String = "Aqim Alsalat"
 
     override fun createComponent(): JComponent {
-        val panel = JPanel(GridLayout(4, 2))
-        panel.add(JLabel("City:"))
-        panel.add(cityField)
-        panel.add(JLabel("Country:"))
-        panel.add(countryField)
-        panel.add(JLabel("Method:"))
-        panel.add(methodField)
-        panel.add(shutdownCheckbox)
+        val panel = JPanel(GridLayout(5, 2, 8, 8))
+        panel.add(JLabel("City:")); panel.add(cityField)
+        panel.add(JLabel("Country:")); panel.add(countryField)
+        panel.add(JLabel("Method:")); panel.add(methodField)
+        panel.add(shutdownCheckbox); panel.add(soundCheckbox)
         return panel
     }
 
     override fun isModified(): Boolean {
-        val settings = SettingsState.getInstance()
-        return cityField.text != settings.city ||
-                countryField.text != settings.country ||
-                methodField.text.toIntOrNull() != settings.method ||
-                shutdownCheckbox.isSelected != settings.shutdownOnPrayer
+        val s = SettingsState.getInstance()
+        return cityField.text != s.city ||
+                countryField.text != s.country ||
+                methodField.text.toIntOrNull() != s.method ||
+                shutdownCheckbox.isSelected != s.shutdownOnPrayer ||
+                soundCheckbox.isSelected != s.playSound
     }
 
     override fun apply() {
-        val settings = SettingsState.getInstance()
-        settings.city = cityField.text
-        settings.country = countryField.text
-        settings.method = methodField.text.toIntOrNull() ?: 5
-        settings.shutdownOnPrayer = shutdownCheckbox.isSelected
+        val s = SettingsState.getInstance()
+        s.city = cityField.text
+        s.country = countryField.text
+        s.method = methodField.text.toIntOrNull() ?: 5
+        s.shutdownOnPrayer = shutdownCheckbox.isSelected
+        s.playSound = soundCheckbox.isSelected
     }
 
     override fun reset() {
-        val settings = SettingsState.getInstance()
-        cityField.text = settings.city
-        countryField.text = settings.country
-        methodField.text = settings.method.toString()
-        shutdownCheckbox.isSelected = settings.shutdownOnPrayer
+        val s = SettingsState.getInstance()
+        cityField.text = s.city
+        countryField.text = s.country
+        methodField.text = s.method.toString()
+        shutdownCheckbox.isSelected = s.shutdownOnPrayer
+        soundCheckbox.isSelected = s.playSound
     }
 }
+
+
 

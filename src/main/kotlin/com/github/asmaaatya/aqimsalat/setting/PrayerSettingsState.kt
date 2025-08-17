@@ -1,10 +1,16 @@
 package com.github.asmaaatya.aqimsalat.setting
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
+import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 
+
+
+@Service(Service.Level.APP)
 @State(name = "AqimAlsalatSettings", storages = [Storage("AqimAlsalatSettings.xml")])
 class SettingsState : PersistentStateComponent<SettingsState> {
+
     var city: String = "Cairo"
     var country: String = "Egypt"
     var method: Int = 5
@@ -18,11 +24,17 @@ class SettingsState : PersistentStateComponent<SettingsState> {
         this.country = state.country
         this.method = state.method
         this.shutdownOnPrayer = state.shutdownOnPrayer
+        this.playSound = state.playSound
     }
 
     companion object {
+        // Safe, non-null (throws if app is not ready, but we're calling after startup)
         fun getInstance(): SettingsState =
-            com.intellij.openapi.application.ApplicationManager.getApplication().getService(SettingsState::class.java)
+            ApplicationManager.getApplication().getService(SettingsState::class.java)
     }
 }
+
+
+
+
 
