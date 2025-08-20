@@ -8,10 +8,8 @@ Aqim As-Salat is a spiritual productivity plugin for Muslim developers that prov
 ## 📌 Features
 
 - ✅ Automatically fetches daily prayer times using [Aladhan API](https://aladhan.com/prayer-times-api).
-- ✅ Displays system tray icon with next prayer info.
 - ✅ Optionally shuts down the IDE at the time of prayer.
-- ✅ Configurable settings: City, Country, Calculation Method, Language.
-- ✅ Supports localization: English & Arabic.
+- ✅ Configurable settings: City, Country, Calculation Method.
 
 ---
 
@@ -28,25 +26,6 @@ Go to: `Settings → Aqim As-Salat`
 All settings are saved automatically using `PrayerSettingsState`.
 
 ---
-
-## 🖼️ Tray Icon
-
-The plugin adds a system tray icon with options:
-- View next prayer time
-- Exit IDE manually
-
----
-
-## 🌐 Localization
-
-The plugin supports:
-- 🇬🇧 English (default)
-- 🇸🇦 Arabic (العربية)
-
-Localization is applied in all dialogs, tray tooltips, and settings.
-
----
-
 ## 🔧 Requirements
 
 - Android Studio / IntelliJ IDEA 2022.3+
@@ -55,43 +34,55 @@ Localization is applied in all dialogs, tray tooltips, and settings.
 
 ---
 ## 📦 src
-├── main
-│   ├── kotlin
-│   │   └── com
-│   │       └── ilaasalaty
-│   │           ├── api
-│   │           │   ├── PrayerApiClient.kt
-│   │           │   └── PrayerTimesApi.kt
-│   │           │   └── PrayerTimesResponse.kt
-│   │           │
-│   │           ├── core
-│   │           │   └── PrayerTimeManager.kt
-│   │           │
-│   │           ├── tray
-│   │           │   └── TrayIconManager.kt
-│   │           │
-│   │           ├── settings
-│   │           │   ├── PrayerSettingsConfigurable.kt
-│   │           │   └── PrayerSettingsState.kt
-│   │           │
-│   │           └── lang
-│   │               └── Messages.kt
-│   │
-│   └── resources
-│       ├── META-INF
-│       │   └── plugin.xml
-│       │
-│       ├── messages.properties              # English (default)
-│       ├── messages_ar.properties           # Arabic
-│       └── icons
-│           └── icon.png
+
+```text
+src
+└── main
+    ├── kotlin
+    │   └── com
+    │       └── github
+    │           └── asmaaatya
+    │               └── aqimsalat
+    │                   ├── api
+    │                   │   ├── PrayerApiClient.kt
+    │                   │   ├── PrayerTimesApi.kt
+    │                   │   └── PrayerTimesResponse.kt
+    │                   ├── core
+    │                   │   ├── PrayerTimeManager.kt
+    │                   │   └── dialog
+    │                   │       └── FocusModeDialog.kt
+    │                   ├── lang
+    │                   │   └── MyBundle.kt
+    │                   ├── reminder
+    │                   │   └── MyReminder.kt
+    │                   ├── services
+    │                   │   └── MyProjectService.kt
+    │                   ├── setting
+    │                   │   ├── PrayerSettingsConfigurable.kt
+    │                   │   └── PrayerSettingsState.kt
+    │                   ├── startup
+    │                   │   └── MyProjectActivity.kt
+    │                   └── tray
+    │                       └── TrayIconManager.kt
+    └── resources
+        ├── icons
+        │   └── icon.svg
+        ├── messages
+        │   ├── MyBundle.properties
+        │   └── MyBundle_ar.properties
+        ├── META-INF
+        │   └── plugin.xml
+        └── sounds
+            └── main_sound.mp3
 
 
+---
 ## 🛠️ Build & Install
 
-1. Open the project in IntelliJ IDEA.
-2. Use **Gradle Plugin Dev** or `buildPlugin` task.
-3. Install `.zip` from `Plugins → Install Plugin from Disk`.
+1. Open IntelliJ IDEA or Android Studio and navigate to the Plugins section from the settings menu.
+2. Search for AqimAlSalat Plugin and click Install.
+3. Restart IntelliJ IDEA or Android Studio to activate the plugin.
+4. Downlod from here https://plugins.jetbrains.com/plugin/27964-aqim-alsalat
 
 
 ## 🙏 Contribution
