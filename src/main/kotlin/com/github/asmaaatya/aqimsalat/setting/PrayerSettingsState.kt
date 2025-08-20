@@ -13,7 +13,7 @@ class SettingsState : PersistentStateComponent<SettingsState> {
 
     var city: String = "Cairo"
     var country: String = "EG"
-    var method: Int = 5
+    var method: Int = 0
     var shutdownOnPrayer: Boolean = false
     var playSound: Boolean = true
 

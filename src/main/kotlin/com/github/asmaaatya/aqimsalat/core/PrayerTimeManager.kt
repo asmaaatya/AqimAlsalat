@@ -34,7 +34,7 @@ class PrayerTimeManager(
             try {
                 val prayerService = ApplicationManager.getApplication().getService(PrayerService::class.java)
                 val timings = prayerService.getPrayerTimesAsync(city, country, method).get()
-                showNotification("[AqimAlsalat] Prayer times result: $timings")
+                showNotification("[AqimAlsalat] Prayer times : $timings")
 
                 val timesList = timings?.toLocalTimeList() ?: emptyList()
                 fetchedPrayerTimes = timesList
@@ -148,7 +148,7 @@ class PrayerTimeManager(
     private fun getPrayerName(time: LocalTime): String {
         return when (time) {
             fetchedPrayerTimes.getOrNull(0) -> "Fajr"
-            fetchedPrayerTimes.getOrNull(1) -> "Dhuhr"
+            fetchedPrayerTimes.getOrNull(1) -> "Duhr"
             fetchedPrayerTimes.getOrNull(2) -> "Asr"
             fetchedPrayerTimes.getOrNull(3) -> "Maghrib"
             fetchedPrayerTimes.getOrNull(4) -> "Isha"
