@@ -3,15 +3,13 @@
     <id>com.github.asmaaatya.aqimsalat</id>
     <name>Aqim Alsalat</name>
     <vendor email="asmaaatya26@gmail.com" url="https://github.com/asmaaatya">Asmaa Atya Mohammed</vendor>
-    <version>0.0.6</version>
+    <version>0.0.7</version>
 
     <!-- Plugin category -->
     <category>Islamic</category>
 
 
     <idea-version since-build="242" />
-
-
     <!-- Required dependency -->
     <depends>com.intellij.modules.platform</depends>
 
