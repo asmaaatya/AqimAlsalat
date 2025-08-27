@@ -26,7 +26,7 @@ class SettingsConfigurable : Configurable {
         "Shia Ithna-Ashari (12)"
     ))
     private val shutdownCheckbox = JBCheckBox("Shutdown on prayer time")
-    private val soundCheckbox = JBCheckBox("Play Adhan sound")
+    private val soundCheckbox = JBCheckBox("Play Adhan and notifications sound")
 
     override fun getDisplayName(): String = "Aqim Alsalat"
 

@@ -39,8 +39,8 @@ class FocusModeDialog(
         panel.preferredSize = Dimension(400, 150)
 
         val message = JLabel(
-            "<html><center>It’s time for <b>$prayerName</b> prayer.<br/>" +
-                    "Focus Mode will end in:</center></html>",
+            "<html><center>حان وقت صلاة <b>$prayerName</b><br/>" +
+                    "سينتهي التذكير بعد :</center></html>",
             SwingConstants.CENTER
         )
         message.font = Font("Dialog", Font.PLAIN, 16)
@@ -56,7 +56,7 @@ class FocusModeDialog(
     }
 
     override fun createActions(): Array<Action> {
-        return arrayOf(object : DialogWrapperAction("I Already Prayed") {
+        return arrayOf(object : DialogWrapperAction("أنهيت الصلاة") {
             override fun doAction(e: java.awt.event.ActionEvent?) {
                 stopTimer()
                 close(OK_EXIT_CODE)
@@ -90,7 +90,7 @@ class FocusModeDialog(
     private fun playAdhanSound() {
         try {
             val audioInputStream = AudioSystem.getAudioInputStream(
-                BufferedInputStream(javaClass.getResourceAsStream("/sounds/main_sound.wav"))
+                BufferedInputStream(javaClass.getResourceAsStream("/sounds/adhan_sound.wav"))
             )
             val clip: Clip = AudioSystem.getClip()
             clip.open(audioInputStream)
